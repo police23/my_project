@@ -1,0 +1,578 @@
+.add-test-container {
+    position: relative;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    width: 100%;
+}
+
+.add-test-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    position: relative;
+}
+
+.add-test-header.centered {
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.add-test-header h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    color: #555;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.back-button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Nút đóng (X) ở góc trên bên phải */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #f0f0f0;
+    border: none;
+    font-size: 24px;
+    line-height: 24px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    transition: all 0.2s ease;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.close-btn:hover {
+    background-color: #e0e0e0;
+    color: #000;
+    transform: scale(1.05);
+}
+
+/* Phần chọn kỹ năng */
+.skill-selection {
+    text-align: center;
+}
+
+.skill-selection h3 {
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.skill-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.skill-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.skill-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.skill-card h4 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: #333;
+}
+
+/* Form styles */
+.add-test-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.add-test-form h3 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.form-section {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.form-section h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.form-section.basic-info h3 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #444;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* File upload styles */
+.file-upload {
+    display: flex;
+    align-items: center;
+}
+
+.file-upload input[type="file"] {
+    display: none;
+}
+
+.upload-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f0f0f0;
+    border: 1px dashed #ccc;
+    color: #555;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.upload-button:hover {
+    background-color: #e4e4e4;
+    border-color: #aaa;
+}
+
+.file-selected {
+    margin-left: 1rem;
+    color: #4CAF50;
+}
+
+/* Questions section styles */
+.questions-section {
+    margin-top: 2rem;
+}
+
+.questions-section h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.add-question-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.question-item {
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.question-item h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.options-group {
+    margin-top: 1rem;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.option-item input[type="text"] {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+/* Form actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.submit-button,
+.cancel-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.submit-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.submit-button:hover {
+    background-color: #45a049;
+}
+
+.submit-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.cancel-button {
+    background-color: #f5f5f5;
+    color: #555;
+    border: 1px solid #ddd;
+}
+
+.cancel-button:hover {
+    background-color: #e8e8e8;
+}
+
+/* Modal overlay cho AddTest */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+    backdrop-filter: blur(5px);
+}
+
+/* Modal for AddTest */
+.add-test-modal {
+    width: 85%;
+    max-width: 900px;
+    height: 65vh;
+    /* Giảm từ 80vh xuống 65vh */
+    max-height: 590px;
+    /* Giảm từ 700px xuống 590px (giảm khoảng 3cm) */
+    overflow-y: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    padding: 0;
+}
+
+.add-test-modal .add-test-container {
+    box-shadow: none;
+    padding: 1.5rem;
+    border-radius: 0;
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* Giảm kích thước các phần tử */
+.add-test-modal .form-section {
+    padding: 1.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.add-test-modal .form-group {
+    margin-bottom: 1.2rem;
+}
+
+.add-test-modal .skill-selection h3 {
+    margin-bottom: 1.5rem;
+}
+
+/* Modal animation for AddTest */
+.modal-overlay .add-test-modal {
+    animation: modalSlideIn 0.4s ease forwards;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Skill selection modal */
+.skill-select-modal {
+    width: 500px;
+    /* Nhỏ gọn hơn */
+    max-width: 90%;
+    height: auto;
+    /* Tự động điều chỉnh theo nội dung */
+    min-height: 300px;
+    max-height: 80vh;
+    padding: 2rem;
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+    font-size: 1.4rem;
+    color: #333;
+    margin: 0;
+}
+
+.skills-grid.compact {
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 cột thay vì 4 */
+    gap: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.skills-grid.compact .skill-card {
+    padding: 1.5rem 1rem;
+}
+
+.skills-grid.compact .skill-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+}
+
+/* Center header title */
+.centered-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.centered-header h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0;
+}
+
+/* Position back button absolutely */
+.absolute-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .add-test-container {
+        padding: 1rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .option-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .option-item input[type="text"] {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Responsive - vẫn giữ 2 cột cho màn hình nhỏ hơn nếu có thể */
+@media (max-width: 500px) {
+    .skills-grid {
+        grid-template-columns: 1fr;
+        /* 1 cột trên màn hình nhỏ */
+    }
+}
+
+/* Điều chỉnh header với nút back và tiêu đề */
+.header-with-back {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    /* Giảm khoảng cách dưới */
+    position: relative;
+}
+
+.header-with-back .back-button {
+    margin-right: 1rem;
+}
+
+.header-with-back .header-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0;
+    flex-grow: 1;
+    text-align: left;
+    /* Căn trái để thẳng hàng với label "Chọn kỹ năng" */
+}
+
+/* Ẩn centered-header cũ vì đã không cần thiết nữa */
+.centered-header {
+    display: none;
+}
+
+/* Điều chỉnh header với nút back và tiêu đề */
+.header-with-back {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    position: relative;
+}
+
+/* Thêm class để điều chỉnh vị trí cao hơn */
+.header-elevated {
+    margin-top: -10px;
+    /* Dịch lên trên 10px */
+    padding-top: 0;
+}
+
+.header-with-back .back-button {
+    margin-right: 1rem;
+}
+
+.header-with-back h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0;
+    flex-grow: 1;
+    text-align: center;
+    margin-right: 2rem;
+    transform: translateX(-20px);
+    margin-left: -20px;
+}
+
+.centered-header {
+    display: none;
+}
+
+
+.add-test-header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.add-test-header .header-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 1.8rem;
+    color: #333;
+    width: 60%;
+    text-align: center;
+}
+
+.add-test-header .back-button {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+}
