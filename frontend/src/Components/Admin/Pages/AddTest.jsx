@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FaArrowLeft, FaUpload, FaSave } from 'react-icons/fa';
+import { FaArrowLeft, FaSave } from 'react-icons/fa';
+import ListeningForm from './Skills/ListeningForm';
+import SpeakingForm from './Skills/SpeakingForm';
+import ReadingForm from './Skills/ReadingForm';
+import WritingForm from './Skills/WritingForm';
 
 const AddTest = () => {
     const navigate = useNavigate();
@@ -15,31 +19,41 @@ const AddTest = () => {
         audio_url: '',
         description: '',
         difficulty: 1,
-        duration: 30,
+        duration: 0,
         content: '',
         questions: []
     });
 
-    // In ra để debug
     console.log("Current skillId from params:", skillId);
+
+    const getSkillId = (skillName) => {
+        switch (skillName.toLowerCase()) {
+            case 'listening': return 1;
+            case 'speaking': return 2;
+            case 'reading': return 3;
+            case 'writing': return 4;
+            default: return null;
+        }
+    };
 
     // Lấy thông tin kỹ năng từ API
     useEffect(() => {
         const fetchSkillInfo = async () => {
-            if (!skillId) {
+            const id = getSkillId(skillId); // skillId here is actually the skill name from URL
+            if (!id) {
                 navigate('/admin/exams/new');
                 return;
             }
 
             try {
-                // Lấy danh sách kỹ năng để lấy tên
+
                 const response = await fetch('http://localhost:4000/api/skills');
                 if (response.ok) {
                     const data = await response.json();
                     setSkills(data);
 
-                    // Tìm kỹ năng được chọn
-                    const skill = data.find(s => s.skill_id === parseInt(skillId));
+
+                    const skill = data.find(s => s.skill_id === id);
                     if (skill) {
                         setSelectedSkill(skill);
                         setFormData(prev => ({ ...prev, skill_id: skill.skill_id }));
@@ -56,7 +70,6 @@ const AddTest = () => {
         fetchSkillInfo();
     }, [skillId, navigate]);
 
-    // Đảm bảo cập nhật formData.skill_id khi skillId thay đổi
     useEffect(() => {
         if (skillId) {
             setFormData(prev => ({
@@ -67,14 +80,40 @@ const AddTest = () => {
         }
     }, [skillId]);
 
+    // Update duration when skill changes
+    useEffect(() => {
+        if (skillId) {
+            const id = getSkillId(skillId);
+            let defaultDuration = 60;
+
+            switch (id) {
+                case 1:
+                    defaultDuration = 32;
+                    break;
+                case 2:
+                    defaultDuration = 0;
+                    break;
+                case 3:
+                case 4:
+                    defaultDuration = 60;
+                    break;
+            }
+
+            setFormData(prev => ({
+                ...prev,
+                skill_id: id,
+                duration: defaultDuration
+            }));
+        }
+    }, [skillId]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
     const handleFileUpload = (e) => {
-        // Xử lý upload file trong thực tế sẽ cần gọi API riêng
-        // Đây là xử lý giản lược cho demo
+
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -85,9 +124,10 @@ const AddTest = () => {
         }
     };
 
-    const handleAddQuestion = () => {
+    const handleAddQuestion = (section = 1) => {
         const newQuestion = {
             id: Date.now(),
+            section: section,
             question: '',
             options: ['', '', '', ''],
             correct_answer: 0
@@ -122,7 +162,7 @@ const AddTest = () => {
         setLoading(true);
 
         try {
-            // Trong thực tế, cần gọi API để lưu đề thi
+
             const response = await fetch('http://localhost:4000/api/tests', {
                 method: 'POST',
                 headers: {
@@ -133,7 +173,7 @@ const AddTest = () => {
 
             if (response.ok) {
                 alert('Thêm đề thi thành công!');
-                navigate('/admin/exams'); // Quay lại trang quản lý đề thi
+                navigate('/admin/exams');
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Có lỗi xảy ra khi thêm đề thi');
@@ -146,217 +186,26 @@ const AddTest = () => {
         }
     };
 
-    // Render form theo kỹ năng được chọn
     const renderFormBySkill = () => {
-        const skillIdNum = parseInt(skillId);
+        const skillIdNum = getSkillId(skillId);
+        const props = {
+            formData,
+            handleChange,
+            handleFileUpload,
+            handleAddQuestion,
+            handleQuestionChange,
+            handleOptionChange,
+            handleCorrectAnswerChange
+        };
 
         switch (skillIdNum) {
-            case 1: return renderListeningForm();
-            case 2: return renderSpeakingForm();
-            case 3: return renderReadingForm();
-            case 4: return renderWritingForm();
+            case 1: return <ListeningForm {...props} />;
+            case 2: return <SpeakingForm {...props} />;
+            case 3: return <ReadingForm {...props} />;
+            case 4: return <WritingForm {...props} />;
             default: return <p>Vui lòng chọn kỹ năng</p>;
         }
     };
-
-    // Form cho kỹ năng Listening
-    const renderListeningForm = () => (
-        <>
-            <div className="form-group">
-                <label>File âm thanh:</label>
-                <div className="file-upload">
-                    <input type="file" id="audio-file" accept="audio/*" onChange={handleFileUpload} />
-                    <label htmlFor="audio-file" className="upload-button">
-                        <FaUpload /> Chọn file âm thanh
-                    </label>
-                    {formData.audio_url && <span className="file-selected">Đã chọn file</span>}
-                </div>
-            </div>
-
-            <div className="questions-section">
-                <h3>Danh sách câu hỏi</h3>
-                <button type="button" className="add-question-button" onClick={handleAddQuestion}>
-                    + Thêm câu hỏi
-                </button>
-
-                {formData.questions.map((question, qIndex) => (
-                    <div className="question-item" key={question.id}>
-                        <h4>Câu hỏi {qIndex + 1}</h4>
-                        <div className="form-group">
-                            <label>Nội dung câu hỏi:</label>
-                            <input
-                                type="text"
-                                value={question.question}
-                                onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)}
-                                placeholder="Nhập nội dung câu hỏi"
-                            />
-                        </div>
-
-                        <div className="options-group">
-                            <label>Các lựa chọn:</label>
-                            {question.options.map((option, oIndex) => (
-                                <div className="option-item" key={oIndex}>
-                                    <input
-                                        type="text"
-                                        value={option}
-                                        onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
-                                        placeholder={`Lựa chọn ${oIndex + 1}`}
-                                    />
-                                    <label className="radio-label">
-                                        <input
-                                            type="radio"
-                                            name={`correct-answer-${question.id}`}
-                                            value={oIndex}
-                                            checked={question.correct_answer === oIndex}
-                                            onChange={() => handleCorrectAnswerChange(qIndex, oIndex)}
-                                        />
-                                        Đáp án đúng
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </>
-    );
-
-    // Form cho kỹ năng Speaking
-    const renderSpeakingForm = () => (
-        <>
-            <div className="form-group">
-                <label>Nội dung bài nói:</label>
-                <textarea
-                    name="content"
-                    value={formData.content}
-                    onChange={handleChange}
-                    placeholder="Nhập nội dung bài nói, yêu cầu hoặc chủ đề..."
-                    rows={6}
-                />
-            </div>
-
-            <div className="questions-section">
-                <h3>Các câu hỏi phỏng vấn</h3>
-                <button type="button" className="add-question-button" onClick={handleAddQuestion}>
-                    + Thêm câu hỏi
-                </button>
-
-                {formData.questions.map((question, qIndex) => (
-                    <div className="question-item" key={question.id}>
-                        <h4>Câu hỏi {qIndex + 1}</h4>
-                        <div className="form-group">
-                            <input
-                                type="text"
-                                value={question.question}
-                                onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)}
-                                placeholder="Nhập câu hỏi phỏng vấn"
-                            />
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </>
-    );
-
-    // Form cho kỹ năng Reading
-    const renderReadingForm = () => (
-        <>
-            <div className="form-group">
-                <label>Nội dung bài đọc:</label>
-                <textarea
-                    name="content"
-                    value={formData.content}
-                    onChange={handleChange}
-                    placeholder="Nhập nội dung văn bản đọc..."
-                    rows={8}
-                />
-            </div>
-
-            <div className="questions-section">
-                <h3>Câu hỏi đọc hiểu</h3>
-                <button type="button" className="add-question-button" onClick={handleAddQuestion}>
-                    + Thêm câu hỏi
-                </button>
-
-                {formData.questions.map((question, qIndex) => (
-                    <div className="question-item" key={question.id}>
-                        <h4>Câu hỏi {qIndex + 1}</h4>
-                        <div className="form-group">
-                            <label>Nội dung câu hỏi:</label>
-                            <input
-                                type="text"
-                                value={question.question}
-                                onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)}
-                                placeholder="Nhập nội dung câu hỏi"
-                            />
-                        </div>
-
-                        <div className="options-group">
-                            <label>Các lựa chọn:</label>
-                            {question.options.map((option, oIndex) => (
-                                <div className="option-item" key={oIndex}>
-                                    <input
-                                        type="text"
-                                        value={option}
-                                        onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
-                                        placeholder={`Lựa chọn ${oIndex + 1}`}
-                                    />
-                                    <label className="radio-label">
-                                        <input
-                                            type="radio"
-                                            name={`correct-answer-${question.id}`}
-                                            value={oIndex}
-                                            checked={question.correct_answer === oIndex}
-                                            onChange={() => handleCorrectAnswerChange(qIndex, oIndex)}
-                                        />
-                                        Đáp án đúng
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </>
-    );
-
-    // Form cho kỹ năng Writing
-    const renderWritingForm = () => (
-        <>
-            <div className="form-group">
-                <label>Đề bài viết:</label>
-                <textarea
-                    name="content"
-                    value={formData.content}
-                    onChange={handleChange}
-                    placeholder="Nhập đề bài viết, yêu cầu, chủ đề..."
-                    rows={6}
-                />
-            </div>
-
-            <div className="form-group">
-                <label>Tiêu chí đánh giá:</label>
-                <textarea
-                    name="criteria"
-                    value={formData.criteria || ''}
-                    onChange={handleChange}
-                    placeholder="Mô tả tiêu chí đánh giá bài viết..."
-                    rows={4}
-                />
-            </div>
-
-            <div className="form-group">
-                <label>Yêu cầu số từ tối thiểu:</label>
-                <input
-                    type="number"
-                    name="min_words"
-                    value={formData.min_words || 250}
-                    onChange={handleChange}
-                    min="50"
-                />
-            </div>
-        </>
-    );
 
     return (
         <div className="add-test-container">
@@ -409,8 +258,9 @@ const AddTest = () => {
                                 name="duration"
                                 value={formData.duration}
                                 onChange={handleChange}
-                                min="1"
-                                required
+                                viewonly
+                                required={parseInt(skillId) !== 2}
+                                disabled={parseInt(skillId) === 2}
                             />
                         </div>
                     </div>

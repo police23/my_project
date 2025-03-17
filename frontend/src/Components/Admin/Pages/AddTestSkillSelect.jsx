@@ -38,9 +38,19 @@ const AddTestSkillSelect = () => {
         fetchSkills();
     }, []);
 
+    const getSkillPath = (skillId) => {
+        switch (skillId) {
+            case 1: return 'listening';
+            case 2: return 'speaking';
+            case 3: return 'reading';
+            case 4: return 'writing';
+            default: return '';
+        }
+    };
+
     const handleSkillSelect = (skillId) => {
-        console.log(`Đang chuyển đến trang thêm đề thi cho kỹ năng ${skillId}`);
-        navigate(`/admin/exams/new/${skillId}`);
+        const skillPath = getSkillPath(skillId);
+        navigate(`/admin/exams/new/${skillPath}`);
     };
 
     return (
@@ -49,7 +59,7 @@ const AddTestSkillSelect = () => {
                 <button className="back-button" onClick={() => navigate('/admin/exams')}>
                     <FaArrowLeft /> Quay lại
                 </button>
-                <h2 style={{ marginLeft: "-20px" }}>Thêm đề thi mới</h2>
+                <h2>Thêm đề thi mới</h2>
             </div>
 
             <div className="skill-selection">
