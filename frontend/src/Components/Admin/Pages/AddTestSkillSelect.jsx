@@ -10,27 +10,17 @@ const AddTestSkillSelect = () => {
 
     useEffect(() => {
         const fetchSkills = async () => {
-            try {
-                const response = await fetch('http://localhost:4000/api/skills');
-                if (response.ok) {
-                    const data = await response.json();
-                    setSkills(data);
-                } else {
-                    console.error('Failed to fetch skills');
-                    setSkills([
-                        { skill_id: 1, skill_name: 'Listening' },
-                        { skill_id: 2, skill_name: 'Speaking' },
-                        { skill_id: 3, skill_name: 'Reading' },
-                        { skill_id: 4, skill_name: 'Writing' }
-                    ]);
-                }
-            } catch (error) {
-                console.error('Error fetching skills:', error);
+            const response = await fetch('http://localhost:4000/api/skills');
+            if (response.ok) {
+                const data = await response.json();
+                setSkills(data);
+            } else {
+                console.error('Failed to fetch skills');
                 setSkills([
                     { skill_id: 1, skill_name: 'Listening' },
-                    { skill_id: 2, skill_name: 'Speaking' },
-                    { skill_id: 3, skill_name: 'Reading' },
-                    { skill_id: 4, skill_name: 'Writing' }
+                    { skill_id: 2, skill_name: 'Reading' },
+                    { skill_id: 3, skill_name: 'Writing' },
+                    { skill_id: 4, skill_name: 'Speaking' }
                 ]);
             }
         };
@@ -38,19 +28,8 @@ const AddTestSkillSelect = () => {
         fetchSkills();
     }, []);
 
-    const getSkillPath = (skillId) => {
-        switch (skillId) {
-            case 1: return 'listening';
-            case 2: return 'speaking';
-            case 3: return 'reading';
-            case 4: return 'writing';
-            default: return '';
-        }
-    };
-
     const handleSkillSelect = (skillId) => {
-        const skillPath = getSkillPath(skillId);
-        navigate(`/admin/exams/new/${skillPath}`);
+        navigate(`/admin/exams/new/${skillId}`);
     };
 
     return (

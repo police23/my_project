@@ -10,7 +10,6 @@ const AddTest = () => {
     const navigate = useNavigate();
     const { skillId } = useParams();
     const [loading, setLoading] = useState(false);
-    const [skills, setSkills] = useState([]);
     const [selectedSkill, setSelectedSkill] = useState(null);
 
     const [formData, setFormData] = useState({
@@ -24,46 +23,28 @@ const AddTest = () => {
         questions: []
     });
 
-    console.log("Current skillId from params:", skillId);
-
-    const getSkillId = (skillName) => {
-        switch (skillName.toLowerCase()) {
-            case 'listening': return 1;
-            case 'speaking': return 2;
-            case 'reading': return 3;
-            case 'writing': return 4;
-            default: return null;
-        }
-    };
-
-    // Lấy thông tin kỹ năng từ API
     useEffect(() => {
+        console.log(`Current skillId from params: ${skillId}`); // Debug
         const fetchSkillInfo = async () => {
-            const id = getSkillId(skillId); // skillId here is actually the skill name from URL
-            if (!id) {
-                navigate('/admin/exams/new');
-                return;
-            }
+            // skillId từ URL bây giờ là ID thực, không cần mapping
+            const id = parseInt(skillId);
 
             try {
-
                 const response = await fetch('http://localhost:4000/api/skills');
                 if (response.ok) {
                     const data = await response.json();
-                    setSkills(data);
-
-
                     const skill = data.find(s => s.skill_id === id);
                     if (skill) {
                         setSelectedSkill(skill);
-                        setFormData(prev => ({ ...prev, skill_id: skill.skill_id }));
+                        setFormData(prev => ({ ...prev, skill_id: id }));
                     } else {
                         navigate('/admin/exams/new');
                     }
+                } else {
+                    console.error('Error fetching skill info');
                 }
             } catch (error) {
                 console.error('Error fetching skill info:', error);
-                navigate('/admin/exams/new');
             }
         };
 
@@ -72,29 +53,21 @@ const AddTest = () => {
 
     useEffect(() => {
         if (skillId) {
-            setFormData(prev => ({
-                ...prev,
-                skill_id: parseInt(skillId)
-            }));
-            console.log("Form data updated with skillId:", skillId);
-        }
-    }, [skillId]);
-
-    // Update duration when skill changes
-    useEffect(() => {
-        if (skillId) {
-            const id = getSkillId(skillId);
+            const id = parseInt(skillId);
             let defaultDuration = 60;
 
             switch (id) {
-                case 1:
+                case 1: // Listening
                     defaultDuration = 32;
                     break;
-                case 2:
+                case 2: // Speaking 
                     defaultDuration = 0;
                     break;
-                case 3:
-                case 4:
+                case 3: // Reading
+                case 4: // Writing
+                    defaultDuration = 60;
+                    break;
+                default:
                     defaultDuration = 60;
                     break;
             }
@@ -113,7 +86,6 @@ const AddTest = () => {
     };
 
     const handleFileUpload = (e) => {
-
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -162,7 +134,6 @@ const AddTest = () => {
         setLoading(true);
 
         try {
-
             const response = await fetch('http://localhost:4000/api/tests', {
                 method: 'POST',
                 headers: {
@@ -170,7 +141,6 @@ const AddTest = () => {
                 },
                 body: JSON.stringify(formData)
             });
-
             if (response.ok) {
                 alert('Thêm đề thi thành công!');
                 navigate('/admin/exams');
@@ -179,7 +149,6 @@ const AddTest = () => {
                 throw new Error(errorData.message || 'Có lỗi xảy ra khi thêm đề thi');
             }
         } catch (error) {
-            console.error('Error adding test:', error);
             alert(error.message);
         } finally {
             setLoading(false);
@@ -187,7 +156,7 @@ const AddTest = () => {
     };
 
     const renderFormBySkill = () => {
-        const skillIdNum = getSkillId(skillId);
+        const id = parseInt(skillId);
         const props = {
             formData,
             handleChange,
@@ -198,11 +167,11 @@ const AddTest = () => {
             handleCorrectAnswerChange
         };
 
-        switch (skillIdNum) {
-            case 1: return <ListeningForm {...props} />;
-            case 2: return <SpeakingForm {...props} />;
-            case 3: return <ReadingForm {...props} />;
-            case 4: return <WritingForm {...props} />;
+        switch (id) {
+            case 1: return <ListeningForm {...props} />; // Listening
+            case 2: return <ReadingForm {...props} />; // Reading (was SpeakingForm)
+            case 3: return <WritingForm {...props} />; // Writing (was ReadingForm)
+            case 4: return <SpeakingForm {...props} />; // Speaking (was WritingForm)
             default: return <p>Vui lòng chọn kỹ năng</p>;
         }
     };
@@ -258,14 +227,11 @@ const AddTest = () => {
                                 name="duration"
                                 value={formData.duration}
                                 onChange={handleChange}
-                                viewonly
-                                required={parseInt(skillId) !== 2}
-                                disabled={parseInt(skillId) === 2}
+                                readOnly
                             />
                         </div>
                     </div>
                 </div>
-
                 <div className="form-section skill-specific">
                     <h3>Chi tiết đề thi</h3>
                     {renderFormBySkill()}

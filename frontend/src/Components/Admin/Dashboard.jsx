@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import Sidebar from './Sidebar';
+import { FaUserCircle } from 'react-icons/fa';
 
 // Import pages
 import Overview from './Pages/Overview';
@@ -51,9 +52,9 @@ const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
 const Dashboard = () => {
     const navigate = useNavigate();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const user = JSON.parse(localStorage.getItem('user'));
 
     // Lấy thông tin người dùng từ localStorage
-    const user = JSON.parse(localStorage.getItem('user'));
 
     // Mở modal xác nhận đăng xuất
     const handleLogoutClick = () => {
@@ -81,9 +82,7 @@ const Dashboard = () => {
                     <h1>Quản trị hệ thống</h1>
                     <div className="user-info">
                         <span>{user ? `${user.last_name} ${user.first_name}` : 'Admin'}</span>
-                        <div className="avatar">
-                            {user ? user.first_name.charAt(0) : 'A'}
-                        </div>
+                        <FaUserCircle size={24} color="#666" />
                         <button className="logout-btn" onClick={handleLogoutClick}>Đăng xuất</button>
                     </div>
                 </div>

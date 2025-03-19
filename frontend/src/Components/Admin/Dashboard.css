@@ -7,7 +7,7 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #f5f5f5;
+    background-color: #ffffff;
     position: relative;
 }
 
@@ -26,7 +26,8 @@
     justify-content: space-between;
     padding: 0.75rem 1.5rem;
     background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    /* Lighter shadow */
     z-index: 10;
     height: 60px;
 }
@@ -66,6 +67,8 @@
     overflow-y: auto;
     height: calc(100vh - 60px);
     /* Chiều cao màn hình trừ chiều cao header */
+    background-color: #fafafa;
+    /* Very light gray background for content */
 }
 
 /* Sidebar */
@@ -73,6 +76,26 @@
     height: 100vh;
     overflow-y: auto;
     z-index: 1000;
+    background-color: #ffffff;
+    /* White background */
+    border-right: 1px solid #eaeaea;
+    /* Subtle border */
+}
+
+/* Update icons in sidebar */
+.nav-icon {
+    color: #666;
+    /* Neutral gray color for icons */
+}
+
+.nav-item:hover .nav-icon {
+    color: #333;
+    /* Darker on hover */
+}
+
+.nav-item.active .nav-icon {
+    color: #1a73e8;
+    /* Keep active state visible */
 }
 
 /* Scrollbar Styles */
@@ -684,4 +707,44 @@ table th {
         display: block;
         overflow-x: auto;
     }
+}
+
+/* Dark mode styles */
+[data-theme='dark'] .admin-dashboard {
+    background-color: #121212;
+}
+
+[data-theme='dark'] .dashboard-header {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .content-wrapper {
+    background-color: #121212;
+}
+
+[data-theme='dark'] .dashboard-header h1 {
+    color: #ffffff;
+}
+
+[data-theme='dark'] .user-info span {
+    color: #ffffff;
+}
+
+/* Add dark mode switch styles */
+.theme-switch {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+    cursor: pointer;
+}
+
+.theme-switch-icon {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+[data-theme='dark'] .theme-switch-icon {
+    color: #ffffff;
 }
